@@ -7,5 +7,5 @@ web-technology
 - Responsive Web Design
 - HTML5
 - CSS 3
-- Bootstrap 4 
+- Bootstrap 4
 - jQuery 3
