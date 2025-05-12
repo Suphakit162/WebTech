@@ -1538,13 +1538,13 @@
 
               <div class="row justify-content-center">
                 <div class="col-md-7">
-                  <form id="contact-from" method="post" action="http://localhost:3000/api/contact" data-aos="fade">
+                  <form id="contact-from" method="post" data-aos="fade">
                     <div class="form-group row">
                       <div class="col-md-6 mb-3 mb-lg-0">
                         <input type="text" id="fname" name="fname" class="form-control" placeholder="First name">
                       </div>
                       <div class="col-md-6">
-                        <input type="text" id="fname" name="fname" class="form-control" placeholder="Last name">
+                        <input type="text" id="lname" name="lname" class="form-control" placeholder="Last name">
                       </div>
                     </div>
           
@@ -1570,8 +1570,7 @@
           
                     <div class="form-group row">
                       <div class="col-md-6">
-          
-                        <input type="submit"  class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
+                        <input type="button" onclick="contactSubmit()" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
                       </div>
                     </div>
           
@@ -1587,39 +1586,38 @@
 
               <div class="form-group row">
                 <div class="col-md-6 mb-3 mb-lg-0">
-                  <input type="text" class="form-control" placeholder="First name">
+                  <input type="text" id="fname" name="fname" class="form-control" placeholder="First name">
                 </div>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Last name">
+                  <input type="text" id="lname" name="lname" class="form-control" placeholder="Last name">
                 </div>
               </div>
 
               <div class="form-group row">
                 <div class="col-md-12">
-                  <input type="email" class="form-control" placeholder="Email">
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <div class="col-md-12">
-                  <select id="subject-list" class="form-control">
+                  <select id="subject" name="subject_list" class="form-control">
                     <option value="">Subject</option>
                   </select>
                 </div>
               </div>
-    
+
+
+              <div class="form-group row">
+                <div class="col-md-12">
+                  <input type="email" id="email" class="form-control" placeholder="Email">
+                </div>
+              </div>
               
               <div class="form-group row">
                 <div class="col-md-12">
-                  <textarea class="form-control" id="" cols="30" rows="10"
+                  <textarea class="form-control" id="message" cols="30" rows="10"
                     placeholder="Write your message here."></textarea>
                 </div>
               </div>
     
               <div class="form-group row">
                 <div class="col-md-6">
-    
-                  <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
+                  <input type="button" onclick="contactSubmit()" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
                 </div>
               </div>
             </div>
@@ -1696,9 +1694,9 @@
             <h3 class="text-white">Subscribe</h3>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Possimus, odio beatae accusantium.
             </p>
-            <form action="#">
+            <form id="subscribe-form" action="#">
               <div class="d-flex mb-5">
-                <input type="text" class="form-control rounded-0" placeholder="Email">
+                <input id="subscribe-email" type="text" class="form-control rounded-0" placeholder="Email">
                 <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
               </div>
             </form>
@@ -1821,7 +1819,7 @@
     }
 
     function subjectList(data){
-      const select = document.getElementById("subject-list");
+      const select = document.getElementById("subject");
       data.contactSubject.forEach( job => {
         console.log(job);
         const option = document.createElement("option")
@@ -1847,9 +1845,54 @@
       
     };
 
-    function contactSubmit() {
-      document.getElementById('contact-from').submit();
+    
+
+    const ajax = async (config) => {
+      const request = await fetch(config.url,{
+        method : 'POST',
+        headers : {
+                    'Accept' : 'application/json',
+                    'Content-Type' : 'application/json'
+                  },
+        body : JSON.stringify(config.data)
+      });
+      const response = await request.json();
+      console.log(response.status)
+      return response;
     }
+
+    function contactSubmit(){
+      let data = {
+                fname : document.getElementById('fname').value,
+                lname : document.getElementById('lname').value,
+                email : document.getElementById('email').value,
+                subject : document.getElementById('subject').value,
+                message : document.getElementById('message').value
+                }
+      console.log(data);
+      let config = {
+                    url : 'http://localhost:3000/api/contact',
+                    method : 'POST',
+                    data : data 
+                  }
+      let response = ajax(config);
+      console.log(response);
+    }
+    
+    document.getElementById('subscribe-form').addEventListener('submit', async (e) => {
+      e.preventDefault(); //not refresh page
+      let subscribeData = {
+                            email : document.getElementById('subscribe-email').value
+                          };
+      const response = await fetch('http://localhost:3000/api/subscribe', {
+              method : 'POST',
+              headers : {'Content-Type' : 'application/json'},
+              body : JSON.stringify(subscribeData)
+      });
+      console.log(response)
+      let result = await response.json();
+      console.log(result.message)
+    })
   </script>
 </body>
 
