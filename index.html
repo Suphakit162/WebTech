@@ -1595,8 +1595,8 @@
 
               <div class="form-group row">
                 <div class="col-md-12">
-                  <select id="subject" name="subject_list" class="form-control">
-                    <option value="">Subject</option>
+                  <select id="occupation" name="occupation_list" class="form-control">
+                    <option value="">Occupation</option>
                   </select>
                 </div>
               </div>
@@ -1893,6 +1893,24 @@
       let result = await response.json();
       console.log(result.message)
     })
+
+    function loadOccupation(url){
+       fetch(url)
+      .then(response => response.json())
+      .then(data => occupationList(data));
+    }
+
+    function occupationList(data){
+      const select = document.getElementById("occupation");
+      data.contactSubject.forEach( job => {
+        console.log(job);
+        const option = document.createElement("option")
+        option.textContent = job;
+        option.value = job;
+        select.appendChild(option);
+
+      });
+    }
   </script>
 </body>
 
