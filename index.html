@@ -1593,14 +1593,14 @@
         </div>
 
         <div class="form-group mb-3">
-          <select id="occupationCategory"  class="form-control">
-            <option value="">Occupation Category</option>
+          <select id="occupationCategory" class="form-control">
+            <option value="">-- Select Category --</option>
           </select>
         </div>
 
         <div class="form-group mb-3">
-          <select id="occupation"  class="form-control">
-            <option value="">Occupation</option>
+          <select id="occupation" class="form-control">
+            <option value="">-- Select Occupation --</option>
           </select>
         </div>
 
@@ -1916,71 +1916,68 @@
 // }
 
 
-  document.addEventListener("DOMContentLoaded", function() {
-    loadOccupation("http://localhost:3030/api/subject");
-    });
+  document.addEventListener("DOMContentLoaded", function () {
+  // โหลด category จาก API
+  loadOccupationCategory("http://localhost:3030/api/subject");
 
-    function loadOccupation(url) {
-    fetch(url)
+  // ผูก event ตอนเลือก category
+  const categorySelect = document.getElementById("occupationCategory");
+  categorySelect.addEventListener("change", handleCategoryChange);
+});
+
+// โหลด occupation category
+function loadOccupationCategory(url) {
+  fetch(url)
     .then(response => response.json())
-    .then(data => occupationList(data));
+    .then(data => populateCategoryDropdown(data));
 }
 
-    function occupationList(data) {
-    const select = document.getElementById("occupationCategory");
-    data.occupationCategory.forEach(job => {
-
+async function populateCategoryDropdown(data) {
+  const select = document.getElementById("occupationCategory");
+  data.occupationCategory.forEach(category => {
     const option = document.createElement("option");
-    option.textContent = job;
-    option.value = job;
+    option.value = category.toLowerCase(); // เช่น "computer"
+    option.textContent = category;
     select.appendChild(option);
-
   });
 }
 
+// โหลด occupation ย่อยเมื่อเลือก category
+async function handleCategoryChange(event) {
+  const selectedCategory = event.target.value;
+  const occupationSelect = document.getElementById("occupation");
+  occupationSelect.innerHTML = '<option value="">-- Select Occupation --</option>';
 
-  async function loadOccupationCategories() {
-    const categorySelect = document.getElementById("occupationCategory");
+  if (!selectedCategory) return;
 
-    try {
-      const response = await fetch("./JSON/occupation-cat.json");
+  try {
+    const path = `./JSON/${selectedCategory}.json`;
+    console.log("กำลังโหลดไฟล์:", path);
 
-      const categories = await response.json();
+    const response = await fetch(path);
 
-      categories.forEach(category => {
-        const option = document.createElement("option");
-        option.value = category.toLowerCase(); // เช่น "computer"
-        option.textContent = category;
-        categorySelect.appendChild(option);
-      });
-
-    } catch (error) {
-      console.error("Error loading occupation categories:", error);
+    if (!response.ok) {
+      throw new Error(`ไม่พบไฟล์: ${path}`);
     }
+
+    const occupations = await response.json();
+    console.log("พบอาชีพ:", occupations);
+
+    const occupationArray = occupations[selectedCategory]; // <== ดึง array ที่ต้องการ
+
+    occupationArray.forEach(occupation => {
+    const option = document.createElement("option");
+    option.value = occupation;
+    option.textContent = occupation;
+    occupationSelect.appendChild(option);
+});
+
+  } catch (error) {
+    console.error("Error loading occupations:", error);
   }
+}
 
-  async function handleCategoryChange(event) {
-    const selectedCategory = event.target.value;
-    const occupationSelect = document.getElementById("occupation");
-    
-    occupationSelect.innerHTML = '<option value="">-- Select Occupation --</option>';
 
-    if (!selectedCategory) return;
-
-    try {
-      const response = await fetch(`./JSON/${selectedCategory}.json`);
-      const occupations = await response.json();
-
-      occupations.forEach(occupation => {
-        const option = document.createElement("option");
-        option.value = occupation;
-        option.textContent = occupation;
-        occupationSelect.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Error loading occupations:", error);
-    }
-  }
 
   </script>
 </body>
