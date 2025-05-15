@@ -1593,13 +1593,13 @@
         </div>
 
         <div class="form-group mb-3">
-          <select id="occupation" name="occupationCategory" class="form-control">
+          <select id="occupationCategory"  class="form-control">
             <option value="">Occupation Category</option>
           </select>
         </div>
 
         <div class="form-group mb-3">
-          <select id="occupation1" name="occupation" class="form-control">
+          <select id="occupation"  class="form-control">
             <option value="">Occupation</option>
           </select>
         </div>
@@ -1893,7 +1893,30 @@
     })
 
 
-    document.addEventListener("DOMContentLoaded", function() {
+//     document.addEventListener("DOMContentLoaded", function() {
+//     loadOccupation("http://localhost:3030/api/subject");
+//     });
+
+//     function loadOccupation(url) {
+//     fetch(url)
+//     .then(response => response.json())
+//     .then(data => occupationList(data));
+// }
+
+//     function occupationList(data) {
+//     const select = document.getElementById("occupationCategory");
+//     data.occupationCategory.forEach(job => {
+
+//     const option = document.createElement("option");
+//     option.textContent = job;
+//     option.value = job;
+//     select.appendChild(option);
+
+//   });
+// }
+
+
+  document.addEventListener("DOMContentLoaded", function() {
     loadOccupation("http://localhost:3030/api/subject");
     });
 
@@ -1904,7 +1927,7 @@
 }
 
     function occupationList(data) {
-    const select = document.getElementById("occupation");
+    const select = document.getElementById("occupationCategory");
     data.occupationCategory.forEach(job => {
 
     const option = document.createElement("option");
@@ -1914,6 +1937,50 @@
 
   });
 }
+
+
+  async function loadOccupationCategories() {
+    const categorySelect = document.getElementById("occupationCategory");
+
+    try {
+      const response = await fetch("./JSON/occupation-cat.json");
+
+      const categories = await response.json();
+
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category.toLowerCase(); // เช่น "computer"
+        option.textContent = category;
+        categorySelect.appendChild(option);
+      });
+
+    } catch (error) {
+      console.error("Error loading occupation categories:", error);
+    }
+  }
+
+  async function handleCategoryChange(event) {
+    const selectedCategory = event.target.value;
+    const occupationSelect = document.getElementById("occupation");
+    
+    occupationSelect.innerHTML = '<option value="">-- Select Occupation --</option>';
+
+    if (!selectedCategory) return;
+
+    try {
+      const response = await fetch(`./JSON/${selectedCategory}.json`);
+      const occupations = await response.json();
+
+      occupations.forEach(occupation => {
+        const option = document.createElement("option");
+        option.value = occupation;
+        option.textContent = occupation;
+        occupationSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error("Error loading occupations:", error);
+    }
+  }
 
   </script>
 </body>
