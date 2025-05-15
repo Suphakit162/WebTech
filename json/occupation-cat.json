@@ -1,7 +1,3 @@
 {
-  "occupationCategory": [
-    "Computer",
-    "Healthcare",
-    "Scientific"
-  ]
+  "occupationCategory": ["Computer","Healthcare","Scientific"]
 }
