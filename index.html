@@ -1516,10 +1516,11 @@
             </p>
           </div>
         </div>
-
+      </div>
+    </div>
         
 
-        <div class="row justify-content-center text-center mb-5">
+    <div class="row justify-content-center text-center mb-5">
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
@@ -1530,6 +1531,8 @@
         
           <!-- Tab panes -->
           <div class="tab-content mt-3">
+
+          
             <div role="tabpanel" class="tab-pane " id="contact-us">
               
               contact-us
@@ -1576,19 +1579,20 @@
                   </form>
                 </div>
               </div>
+            </div>
 
             
-            </div>
-            <div role="tabpanel" class="tab-pane fade" id="register">
+            
+      <div role="tabpanel" class="tab-pane fade" id="register">
 
       <form id="register-form" method="post">
 
         <div class="form-group row mb-3">
           <div class="col-md-6">
-            <input type="text" id="fname" name="fname" class="form-control" placeholder="First name">
+            <input type="text" id="register-fname" name="fname" class="form-control" placeholder="First name">
           </div>
           <div class="col-md-6">
-            <input type="text" id="lname" name="lname" class="form-control" placeholder="Last name">
+            <input type="text" id="register-lname" name="lname" class="form-control" placeholder="Last name">
           </div>
         </div>
 
@@ -1605,11 +1609,11 @@
         </div>
 
         <div class="form-group mb-3">
-          <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+          <input type="email" id="register-email" name="email" class="form-control" placeholder="Email">
         </div>
 
         <div class="form-group mb-4">
-          <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+          <input type="password" id="register-password" name="password" class="form-control" placeholder="Password">
         </div>
 
         <div class="form-group">
@@ -1619,8 +1623,11 @@
 
       </form>
 
-    </div>
-            <div role="tabpanel" class="tab-pane" id="sign-in"><form method="post" data-aos="fade"> Sign-in
+    
+            <div role="tabpanel" class="tab-pane" id="sign-in">
+            <form method="post" data-aos="fade"> 
+              
+              Sign-in
                 
         
                   <div class="form-group row">
@@ -1643,7 +1650,8 @@
                     </div>
                   </div>
         
-                </form></div>
+                </form>
+              </div>
             
           </div>
         
@@ -1652,6 +1660,7 @@
         
       </div>
     </div>
+  
 
     
     <footer class="footer-section bg-dark">
@@ -1930,12 +1939,16 @@ async function populateCategoryDropdown(data) {
 async function handleCategoryChange(event) {
   const selectedCategory = event.target.value;
   const occupationSelect = document.getElementById("occupation");
+
+  // ① ล้าง dropdown เก่า
   occupationSelect.innerHTML = '<option value="">-- Select Occupation --</option>';
 
   if (!selectedCategory) return;
 
   try {
     const path = `./JSON/${selectedCategory}.json`;
+
+    // ② ดูว่า path ที่จะ fetch ถูกต้องไหม
     console.log("กำลังโหลดไฟล์:", path);
 
     const response = await fetch(path);
@@ -1944,17 +1957,21 @@ async function handleCategoryChange(event) {
       throw new Error(`ไม่พบไฟล์: ${path}`);
     }
 
+    // ③ ตรวจดู object/raw JSON ที่ fetch มาได้
     const occupations = await response.json();
-    console.log("พบอาชีพ:", occupations);
+    console.log("Raw JSON:", occupations);
 
-    const occupationArray = occupations[selectedCategory]; // <== ดึง array ที่ต้องการ
+    // ④ ตรวจดู array ที่ดึงออกมาจาก object
+    const occupationArray = occupations[selectedCategory];
+    console.log("Array ที่ใช้เติม dropdown:", occupationArray);
 
-    occupationArray.forEach(occupation => {
-    const option = document.createElement("option");
-    option.value = occupation;
-    option.textContent = occupation;
-    occupationSelect.appendChild(option);
-});
+    // ⑤ เติม dropdown
+    occupationArray.forEach((occupation) => {
+      const option = document.createElement("option");
+      option.value = occupation;
+      option.textContent = occupation;
+      occupationSelect.appendChild(option);
+    });
 
   } catch (error) {
     console.error("Error loading occupations:", error);
@@ -1966,15 +1983,16 @@ async function submitRegister() {
   const lname = document.getElementById('register-lname').value.trim();
   const email = document.getElementById('register-email').value.trim();
   const password = document.getElementById('register-password').value.trim();
-  const occupation = document.getElementById('professions-dropdown') ? document.getElementById('professions-dropdown').value : '';
+  const occupation = document.getElementById('occupationCategory') ? document.getElementById('occupationCategory').value : '';
 
   if (!fname || !lname || !email || !password || !occupation) {
+    console.warn("ค่าที่หาย:", { fname, lname, email, password, occupation });
     alert('Please fill in all fields.');
     return;
   }
 
   try {
-    const response = await fetch('http://localhost:4000/api/register', {
+    const response = await fetch('http://localhost:3030/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ fname, lname, email, password, occupation })
@@ -1990,6 +2008,47 @@ async function submitRegister() {
   } catch (error) {
     console.error('Error submitting registration:', error);
     alert('An error occurred during registration.');
+  }
+}
+
+async function submitLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
+
+  if (!email || !password) {
+    alert("Please fill in both email and password.");
+    return;
+  }
+
+  try {
+    const response = await fetch('http://localhost:3030/api/login', {
+      method: 'POST', // ต้องใช้ POST
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: email, password: password })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(data.message); // Login successfully
+    } else {
+      alert(data.message); // Incorrect email or password
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+    alert('An error occurred during login.');
+  
+  }
+}
+async function checkDuplicateEmails(email) {
+  try {
+    const response = await fetch('http://localhost:3030/api/users');
+    console.log('User API called')
+    const users = await response.json();
+    return users.some(user => user.email.toLowerCase() === email.toLowerCase());
+  } catch (error) {
+    console.error('Error checking duplicate emails:', error);
+    return false; // ถ้าเช็คไม่ได้ จะไม่บล็อกการสมัคร (คุณอาจเปลี่ยนเป็น true เพื่อป้องกัน)
   }
 }
 

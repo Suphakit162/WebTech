@@ -1,0 +1,16 @@
+[
+  {
+    "fname": "Suphakit",
+    "lname": "Sanwongkham",
+    "email": "supakita1234@gmail.com",
+    "password": "1234",
+    "occupation": "computer"
+  },
+  {
+    "fname": "Suphakit",
+    "lname": "Sanwongkham",
+    "email": "supakita12345@gmail.com",
+    "password": "1234",
+    "occupation": "healthcare"
+  }
+]

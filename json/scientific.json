@@ -1,5 +1,5 @@
 {
-    "scientific" : [
+    "scientific": [
     "Psychologist",
     "Chemist",
     "Microbiologist",
@@ -17,21 +17,20 @@
     "Medical scientist",
     "Biochemist",
     "Forensic scientist",
-     "Biological Technicians",
-      "Agronomist",
-       "Pharmacologist",
-        "hydrologist",
-         "Political scientist",
-          "Chemical engineer",
-           "Hydrologists",
-            "Historian",
-             "Zoologist",
-              "Meteorologist",
-              "Veterinarian",
-              "Sociologist",
-              "Physicists and Astronomers",
-              "Astronomer",
-              "Physician Consultant"
+    "Biological Technicians",
+    "Agronomist",
+    "Pharmacologist",
+    "hydrologist",
+    "Political scientist",
+    "Chemical engineer",
+    "Hydrologists",
+    "Historian",
+    "Zoologist",
+    "Meteorologist",
+    "Veterinarian",
+    "Sociologist",
+    "Physicists and Astronomers",
+    "Astronomer",
+    "Physician Consultant"
 ]
-
 }

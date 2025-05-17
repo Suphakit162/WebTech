@@ -1,5 +1,5 @@
 {
-    "healcare" : [
+    "healthcare": [
     "Health professional",
     "Physician Associate",
     "Pharmacist",
@@ -20,16 +20,15 @@
     "Chiropractor",
     "Optician",
     "Orthotists and Prosthetists",
-     "Physical Therapists",
-      "Podiatrists",
-       "Personal Care Aides",
-       "Technologist",
-       "Pathologist",
-        "EMTs and Paramedics",
-         "Nurse",
-         "Psychiatrist",
-         "Anaesthesiologist",
-         "Physiotherapist"
+    "Physical Therapists",
+    "Podiatrists",
+    "Personal Care Aides",
+    "Technologist",
+    "Pathologist",
+    "EMTs and Paramedics",
+    "Nurse",
+    "Psychiatrist",
+    "Anaesthesiologist",
+    "Physiotherapist"
 ]
-
 }
